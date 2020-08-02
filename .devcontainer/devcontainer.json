@@ -1,0 +1,32 @@
+{
+  "name": "Node.js RSA",
+  "dockerFile": "Dockerfile",
+
+  "runArgs": [
+      "--hostname=node.js"
+  ],
+
+  // Comment out the next line to run as root instead.
+  "remoteUser": "node",
+
+  // Use 'settings' to set *default* container specific settings.json values on container create. 
+  "settings": {
+      "terminal.integrated.shell.linux": "/usr/bin/zsh"
+  },
+
+  "containerEnv": {
+      "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+      "TZ": "Europe/Prague"
+  },
+
+  "mounts": [
+      "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind",
+      "source=${localEnv:HOME}/.zshrc,target=/home/node/.zshrc,type=bind",
+      "source=${localEnv:HOME}/.oh-my-zsh,target=/home/node/.oh-my-zsh,type=bind",
+      "source=${localEnv:HOME}/.p10k.zsh,target=/home/node/.p10k.zsh,type=bind"
+  ],
+
+  // Specifies a command that should be run after the container has been created.
+  "postCreateCommand": "npm install",
+
+}
