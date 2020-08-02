@@ -61,6 +61,9 @@
 * dave@ohdave.com
 */
 
+const BigInt = require('./BigInt');
+const Barrett = require('./Barrett');
+
 /*****************************************************************************/
 
 var RSAAPP = {};
@@ -134,9 +137,9 @@ function RSAKeyPair(encryptionExponent, decryptionExponent, modulus, keylen)
 * Convert from hexadecimal and save the encryption/decryption exponents and
 * modulus as big integers in the key object.
 */
-this.e = biFromHex(encryptionExponent);
-this.d = biFromHex(decryptionExponent);
-this.m = biFromHex(modulus);
+this.e = BigInt.biFromHex(encryptionExponent);
+this.d = BigInt.biFromHex(decryptionExponent);
+this.m = BigInt.biFromHex(modulus);
 /*
 * Using big integers, we can represent two bytes per element in the big
 * integer array, so we calculate the chunk size as:
@@ -149,14 +152,14 @@ this.m = biFromHex(modulus);
 * However, having said all this, "User Knows Best".  If our caller passes us
 * a key length (in bits), we'll treat it as gospel truth.
 */
-if (typeof(keylen) != 'number') { this.chunkSize = 2 * biHighIndex(this.m); }
+if (typeof(keylen) != 'number') { this.chunkSize = 2 * BigInt.biHighIndex(this.m); }
 else { this.chunkSize = keylen / 8; }
 
 this.radix = 16;
 /*
 * Precalculate the stuff used for Barrett modular reductions.
 */
-this.barrett = new BarrettMu(this.m);
+this.barrett = new Barrett.BarrettMu(this.m);
 }
 
 /*****************************************************************************/
@@ -441,7 +444,7 @@ for (i = 0; i < al; i += key.chunkSize) {
   /*
   * Get a block.
   */
-  block = new BigInt();
+  block = new BigInt.BigInt();
 
   j = 0;
 
@@ -454,10 +457,10 @@ for (i = 0; i < al; i += key.chunkSize) {
   */
   crypt = key.barrett.powMod(block, key.e);
   if (encodingtype == 1) {
-	  text = biToBytes(crypt);
+	  text = BigInt.biToBytes(crypt);
   }
   else {
-	  text = (key.radix == 16) ? biToHex(crypt) : biToString(crypt, key.radix);
+	  text = (key.radix == 16) ? BigInt.biToHex(crypt) : BigInt.biToString(crypt, key.radix);
   }
   result += text;
 }
@@ -544,8 +547,8 @@ for (i = 0; i < blocks.length; ++i) {
   * Depending on the radix being used for the key, convert this cyphertext
   * block into a big integer.
   */
-  if (key.radix == 16) { bi = biFromHex(blocks[i]); }
-  else { bi = biFromString(blocks[i], key.radix); }
+  if (key.radix == 16) { bi = BigInt.biFromHex(blocks[i]); }
+  else { bi = BigInt.biFromString(blocks[i], key.radix); }
   /*
   * Decrypt the cyphertext.
   */
@@ -555,7 +558,7 @@ for (i = 0; i < blocks.length; ++i) {
   * we are using big integers, each element thereof represents two bytes of
   * plaintext.
   */
-  for (j = 0; j <= biHighIndex(b); ++j) {
+  for (j = 0; j <= BigInt.biHighIndex(b); ++j) {
     result += String.fromCharCode(b.digits[j] & 255, b.digits[j] >> 8);
   }
 }
@@ -570,3 +573,10 @@ if (result.charCodeAt(result.length - 1) == 0) {
 */
 return (result);
 }
+
+module.exports = {
+  RSAAPP:          RSAAPP,
+  RSAKeyPair:      RSAKeyPair,
+  encryptedString: encryptedString,
+  decryptedString: decryptedString,
+};

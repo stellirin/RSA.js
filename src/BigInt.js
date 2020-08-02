@@ -79,7 +79,7 @@ function setMaxDigits(value)
 	bigOne.digits[0] = 1;
 }
 
-setMaxDigits(20);
+setMaxDigits(262);
 
 // The maximum number of digits in base 10 you can convert to an
 // integer without JavaScript throwing up on you.
@@ -641,3 +641,41 @@ function biPowMod(x, y, m)
 	return result;
 }
 
+module.exports = {
+	setMaxDigits: setMaxDigits,
+	BigInt: BigInt,
+	biFromDecimal: biFromDecimal,
+	biCopy: biCopy,
+	biFromNumber: biFromNumber,
+	// reverseStr: reverseStr,
+	biToString: biToString,
+	biToDecimal: biToDecimal,
+	// digitToHex: digitToHex,
+	biToHex: biToHex,
+	// charToHex: charToHex,
+	// hexToDigit: hexToDigit,
+	biFromHex: biFromHex,
+	biFromString: biFromString,
+	biToBytes: biToBytes,
+	// digitToBytes: digitToBytes,
+	biDump: biDump,
+	biAdd: biAdd,
+	biSubtract: biSubtract,
+	biHighIndex: biHighIndex,
+	biNumBits: biNumBits,
+	biMultiply: biMultiply,
+	biMultiplyDigit: biMultiplyDigit,
+	// arrayCopy: arrayCopy,
+	biShiftLeft: biShiftLeft,
+	biShiftRight: biShiftRight,
+	biMultiplyByRadixPower: biMultiplyByRadixPower,
+	biDivideByRadixPower: biDivideByRadixPower,
+	biModuloByRadixPower: biModuloByRadixPower,
+	biCompare: biCompare,
+	biDivideModulo: biDivideModulo,
+	biDivide: biDivide,
+	biModulo: biModulo,
+	biMultiplyMod: biMultiplyMod,
+	biPow: biPow,
+	biPowMod: biPowMod,
+};
