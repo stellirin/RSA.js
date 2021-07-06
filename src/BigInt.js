@@ -79,7 +79,7 @@ function setMaxDigits(value)
 	bigOne.digits[0] = 1;
 }
 
-setMaxDigits(262);
+setMaxDigits(512+8);
 
 // The maximum number of digits in base 10 you can convert to an
 // integer without JavaScript throwing up on you.

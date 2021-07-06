@@ -1,23 +1,42 @@
 const RSA = require('../src/RSA');
 
-var key = new RSA.RSAKeyPair(
-  // Public exponent extracted from private_key.pem using
-  // openssl rsa -inform PEM -text -noout < private_key.pem
-  // Or extracted from public key PEM file using
-  // openssl rsa -pubin -inform PEM -text -noout < public_key.pem
+// openssl rsa -pubin -inform PEM -modulus -noout < test/keys/id_rsa-1024.pub.pem
+const id_rsa_1024 = new RSA.RSAKeyPair(
+  // Public Exponent
   "10001",
 
-  // Dummy decryption exponent -- actual value only kept on server.
+  // Dummy Private Exponent
   "0",
 
-  // Modulus extracted from private key PEM file using
-  // openssl rsa -inform PEM -modulus -noout < private_key.pem
-  // Or extracted from public key PEM file using
-  // openssl rsa -pubin -inform PEM -modulus -noout < public_key.pem
-  "b1ae618873ee7ff972e9be6dba93f24f0ef38ac50c2265f7274696b37e6159d2c81a798552360e941be4f9e22522b5421bf753f1ab22626ddee300ee675553e57ad5ab86f77a75c28babdb3e263aad1245e4a2cf58789406083d56d3a4bd6d04e17a77f1919a2b9e1176a0b21931bc82a132ef0af661076d92cef6b13313886f"
+  // Modulus extracted from public key PEM file
+  "becdebfb4d45bf685e37b4893cccc180ed0010800c14fbe5bd8b141b5b20096635bcc45f19a2ef8291589d67066e84606615b497108a9bb67d566efad596209ea399c2f8f08836bf73cb5f664d14e1f793af561a820ec99c982ba2bff03dd5d942d073dbe4c1891c78a5dcf0f4467fc8ab09f142a4156d8326f9cf907d6b6fa9",
 );
 
-function encryptString(string) {
+// openssl rsa -pubin -inform PEM -modulus -noout < test/keys/id_rsa-2048.pub.pem
+const id_rsa_2048 = new RSA.RSAKeyPair(
+  // Public Exponent
+  "10001",
+
+  // Dummy Private Exponent
+  "0",
+
+  // Modulus extracted from public key PEM file
+  "9ef5933e29da2787f53a9daf0811c3bbff235873203b2b4d001d473d622f2d0bc28779be3c4ce166ff8ce745e33c20a0190a6360d42b816a3a732c3114cff22bc23c997ef2446aa94057e4f40ee1b3813abf3a44ee7b151824a93e8acddf722565e2a2e7740074a6ffaec0eea98e12a4274726835169e16593d7db9c1e16172941ffd10ad2a5030d5a3e58c53ac701a57b8eca3abeb3ba20cbfdbee7a6e32260e944f0b9d60ca358c27ecf8cef770793fe04c6312b9209df3310899710242125fb78f9585f19aee09a8402bdb20029587050b85385305649c73391fed4731fb28fd40e2f823dc3f401ffcac555e78c25bc32550c22283391a36bba10ab1db06f",
+);
+
+// openssl rsa -pubin -inform PEM -modulus -noout < test/keys/id_rsa-4096.pub.pem
+const id_rsa_4096 = new RSA.RSAKeyPair(
+  // Public Exponent
+  "10001",
+
+  // Dummy Private Exponent
+  "0",
+
+  // Modulus extracted from public key PEM file
+  "b5685ce3d0731bee2de0c7dd94483dac676b421c69fd0cd86bf6f47d976e463072d859d88e6c8a926ab115af5f92a7564a79ab8ef649d594c01039fb3e90f884b7eff87ee328cb5e6d27e3a13f7820aefbf6fcd59b865a95a4155c1034a11f905fef91c4bc58a4e17b936c6fb7ce5cf295e11440ba76b37e3d3de87a5d15cb3a5968c8ed604ad7d5261af94ed57e09f9909e468d5cd9f3ebbf421dfe37d664ed6b430988e72ea95d86dbab30896d65d5db919a609ac9d842901290955ffece012d788b1b26c7942a05be0fd01239c1eb18ef2d80301240b9a38cab8efd97c71f9f1b1d3e86461faca42efa3b8e3f097f447c8b75207fab0be9eee597093f6d442f900c9a756e6aac537fcde2138ebe249cd18ad55bcafa62761ffb6652c26a9f2e2920bb683b4afb38b55c63c15ffe2ee181848b9f552f8e9f1949c990755677c27675497ca86e7881d315c4e5facf15c90a262d92b71163437b22e301811a5d31407080ff2ed858720c7b04cdbada607697503210419ba8b143cbb42f530947f87294956a1a54cdc628498a25b5c3e0428a6c5ec85c87737462aa11a2f5a75ddd2c18c77184c2bf1dae18b23a097bf2d732d235a98bd027940ff54249cd789790ae5a83bcef3c6da352e6e3b0dda6b6b704eae53a3604cb0f4c2bd83c5bc375ff8de5b41cafb21b9e5221208c3fd65866fd6ee3c7b9d3cfa79a6e67690da263",
+);
+
+function encryptString(key, string) {
 
   var cipherText = RSA.encryptedString(
     key,
@@ -27,10 +46,26 @@ function encryptString(string) {
   return cipherText
 }
 
-test('encryptString', () => {
+test('id_rsa_1024', () => {
   expect(
-    encryptString("password")
+    encryptString(id_rsa_1024, "password")
   ).toBe(
-    "1afa376394f638f4a2828c31abadf05ba84b8a7698a1f8c7374c172912df10f4b821dfca1d9830f53e87d8311b4af6f8a07c3e46721eb1517f100ce8f7fac62e6a2d32a210929efb01275884ef5a2284f269eeb9380c15bcdfc52a49ea04429849059166394ee1f220d8e92a64583646d0499fcd0b345e474c1f4d6074d4bcb8"
+    "9774dd3e60ced0b4c2cbd0770cc19c4736f56f8da2673297ac3a5c6d4340eea1c7c59739f2261a0e90b051cbf8df693e471b18a256ceb4fe036ff89cdeefc9af05d8bec1a983e18a0e55472b998d33631e28df5882cdb6bca643e855d3eace2beb097ece8061420a786d8664853fcbcb0e92db6ca64cde2463e4c769f16a8042"
+  );
+});
+
+test('id_rsa_2048', () => {
+  expect(
+    encryptString(id_rsa_2048, "password")
+  ).toBe(
+    "4b8e9086ed90627060857288cde7eb5d0bb0c5e87cb192704ec8126f2b366a78dde051893a38b7fd1be3b4ca0bd95b759894284ab12f93d00b90e007245952090a370afedc1cd2570b2798fabf2bb2e004d2c2a360c69229e44dfa49bf22a7a6ff9e50a5a19878ade19ccaf1f6ac9991ac32781dbc62249d02f3926526ecf2e87cd0f814d4d18e6ff739d7083f3a854654f7c6feff7e21735a990bb99e0ebda1ce9e4158bbd53fc76b7ded74fafba821d822e8e58b609b8e1190396a8360870fc4f35c433f4e4fa6babd8dccc01fd74ed138dac2a9e9f2602cffcf541f249cc9de5edca3fe57aa2ee3a181a0b2f3317e142015fe7aa9984be7b6a8f2d2e283d2"
+  );
+});
+
+test('id_rsa_4096', () => {
+  expect(
+    encryptString(id_rsa_4096, "password")
+  ).toBe(
+    "ae1c3bd57127df48198594748f1a04f160120307d0d718085b7bebb7a615134144b52a6771ae27bfa160b6e670b4c27e1e6c5b132d23bdf4a6fd9277ad27d3ee0146059867b9cc50e75600f82612bbf4dbcb23527d7dd5fd233f2b2e2c6a1d0bb4cab78bea2650626845a0f10d12a9bd29a5aefe39b9eb4caf59f40e3a4a429adf1b659ecbdb01dda45830f0b344ac11487a591a99a77ee1e5ffd15cf7047bd64bc2d91d92300fb04acefddaa2cd4fb7e698987360180b60500eccc58445911bf42a4ec9f120e28fba8af93452714782314242255d5afdd8994b991ad7e024a6a91a4a663bc7cb76d3505ecc42fbec33c87bce297806f94f0a4f66b5d13729c2ca58276f62e97e15e66f305943dbfa65abcacac854b309d999077fc5c8bd4795d592ecdd6d2471ab049df191db0b8b46718d6140e94fc19b57f148b778fc917c7e5503c3d308d341618cb78f72b32d0356cf75e39ad4ba84232a1c2ce93dc69bb008272f25900bf684e2f5c8d45645d3aaeff38a1ea7ca27f20ec93b4c9ffdd392ac90f63b24602fd2e6f500c92d1967db9634e74c4a937e716163e7d8cad387f55d065d5096bed3ab3eeac98ea41654cc535fd1c6a592fddd1680b77b36fe9910724e97c4290c6a35bc1e8c1292cf16ab3903815a35808176371b6e4369e5adf21f42def351eee937439b35efb25d34b194c7d2b7d9b79ad6f23a0c81cba6e7"
   );
 });
